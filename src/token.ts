@@ -113,7 +113,7 @@ export class Token {
 
       const tokensSold = amount * 10 ** this.decimals;
 
-      const batch = this.tezos
+      const batch = this.tezos.contract
         .batch()
         .withContractCall(
           contract.methods.approve(this.poolContractAddress, tokensSold)
@@ -147,11 +147,23 @@ export class Token {
   }
 }
 
+export class KUSD extends Token {
+  constructor(toolkit: TezosToolkit, secretKey: string) {
+    super(
+      'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
+      'KT1AbYeDbjjcAnV1QK7EZUUdqku77CdkTuv6',
+      toolkit,
+      secretKey
+    );
+    this.decimals = 18;
+  }
+}
+
 export class TzBTC extends Token {
   constructor(toolkit: TezosToolkit, secretKey: string) {
     super(
       'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn',
-      'KT1DrJV8vhkdLEj76h1H9Q4irZDqAkMPo1Qf',
+      'KT1BGQR7t4izzKZ7eRodKWTodAsM23P38v7N',
       toolkit,
       secretKey
     );
@@ -163,10 +175,22 @@ export class UsdTZ extends Token {
   constructor(toolkit: TezosToolkit, secretKey: string) {
     super(
       'KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9',
-      'KT1Puc9St8wdNoGtLiD2WXaHbWU7styaxYhD',
+      'KT1Tr2eG3eVmPRbymrbU2UppUmKjFPXomGG9',
       toolkit,
       secretKey
     );
+  }
+}
+
+export class ETHtz extends Token {
+  constructor(toolkit: TezosToolkit, secretKey: string) {
+    super(
+      'KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8',
+      'KT1PDrBE59Zmxnb8vXRgRAG1XmvTMTs5EDHU',
+      toolkit,
+      secretKey
+    );
+    this.decimals = 18;
   }
 }
 
