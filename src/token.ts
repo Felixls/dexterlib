@@ -2,23 +2,31 @@ import { TezosToolkit } from '@taquito/taquito';
 import { BigNumber } from 'bignumber.js';
 import { Signer } from './signer';
 
+export enum Network {
+  Mainnet = 'mainnet',
+  Delphinet = 'delphinet',
+}
+
 export class Token {
   protected tezos: TezosToolkit;
   protected poolContractAddress: string;
   protected contractAddress: string;
   decimals = 6;
   protected secretKey: string;
+  protected network: Network;
 
   constructor(
     address: string,
     poolAddress: string,
     toolkit: TezosToolkit,
-    secretKey: string
+    secretKey: string,
+    network: Network
   ) {
     this.poolContractAddress = poolAddress;
     this.contractAddress = address;
     this.tezos = toolkit;
     this.secretKey = secretKey;
+    this.network = network;
   }
 
   async getXTZPool(): Promise<BigNumber> {
@@ -148,55 +156,85 @@ export class Token {
 }
 
 export class KUSD extends Token {
-  constructor(toolkit: TezosToolkit, secretKey: string) {
-    super(
-      'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV',
-      'KT1AbYeDbjjcAnV1QK7EZUUdqku77CdkTuv6',
-      toolkit,
-      secretKey
-    );
+  constructor(toolkit: TezosToolkit, secretKey: string, network: Network) {
+    let assetContract = '';
+    let poolContract = '';
+    switch (network) {
+      case Network.Mainnet:
+        assetContract = 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV';
+        poolContract = 'KT1AbYeDbjjcAnV1QK7EZUUdqku77CdkTuv6';
+        break;
+      case Network.Delphinet:
+        assetContract = 'KT1RXpLtz22YgX24QQhxKVyKvtKZFaAVtTB9';
+        poolContract = 'KT1XTUGj7Rkgh6vLVDu91h81Xu2WGfyTxpqi';
+        break;
+    }
+
+    super(assetContract, poolContract, toolkit, secretKey, network);
     this.decimals = 18;
   }
 }
 
 export class TzBTC extends Token {
-  constructor(toolkit: TezosToolkit, secretKey: string) {
-    super(
-      'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn',
-      'KT1BGQR7t4izzKZ7eRodKWTodAsM23P38v7N',
-      toolkit,
-      secretKey
-    );
+  constructor(toolkit: TezosToolkit, secretKey: string, network: Network) {
+    let assetContract = '';
+    let poolContract = '';
+    switch (network) {
+      case Network.Mainnet:
+        assetContract = 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
+        poolContract = 'KT1BGQR7t4izzKZ7eRodKWTodAsM23P38v7N';
+        break;
+      case Network.Delphinet:
+        assetContract = 'KT1HeJBNHwWY18CuncPmMUVrSxurStXsMMvF';
+        poolContract = 'KT1QGd6nEG2Dg2LcmkpveYQ98j5b2WgePtdo';
+        break;
+    }
+
+    super(assetContract, poolContract, toolkit, secretKey, network);
     this.decimals = 8;
   }
 }
 
 export class UsdTZ extends Token {
-  constructor(toolkit: TezosToolkit, secretKey: string) {
-    super(
-      'KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9',
-      'KT1Tr2eG3eVmPRbymrbU2UppUmKjFPXomGG9',
-      toolkit,
-      secretKey
-    );
+  constructor(toolkit: TezosToolkit, secretKey: string, network: Network) {
+    let assetContract = '';
+    let poolContract = '';
+    switch (network) {
+      case Network.Mainnet:
+        assetContract = 'KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9';
+        poolContract = 'KT1Tr2eG3eVmPRbymrbU2UppUmKjFPXomGG9';
+        break;
+      case Network.Delphinet:
+        assetContract = 'KT1WvDfFgUKXWiBvQT46F8GpZ3rjQ6hLo7tz';
+        poolContract = 'KT1Uw3c2EgxTEVN378PaaK68jNK4DqcEuLcy';
+        break;
+    }
+
+    super(assetContract, poolContract, toolkit, secretKey, network);
   }
 }
 
 export class ETHtz extends Token {
-  constructor(toolkit: TezosToolkit, secretKey: string) {
-    super(
-      'KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8',
-      'KT1PDrBE59Zmxnb8vXRgRAG1XmvTMTs5EDHU',
-      toolkit,
-      secretKey
-    );
+  constructor(toolkit: TezosToolkit, secretKey: string, network: Network) {
+    let assetContract = '';
+    let poolContract = '';
+    switch (network) {
+      case Network.Mainnet:
+        assetContract = 'KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8';
+        poolContract = 'KT1PDrBE59Zmxnb8vXRgRAG1XmvTMTs5EDHU';
+        break;
+      case Network.Delphinet:
+        throw new Error('contract not available');
+    }
+
+    super(assetContract, poolContract, toolkit, secretKey, network);
     this.decimals = 18;
   }
 }
 
 export class XTZ extends Token {
-  constructor(toolkit: TezosToolkit) {
-    super('', '', toolkit, '');
+  constructor(toolkit: TezosToolkit, network: Network) {
+    super('', '', toolkit, '', network);
   }
 
   async getBalance(address: string): Promise<BigNumber> {
