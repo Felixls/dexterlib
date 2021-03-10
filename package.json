@@ -1,6 +1,6 @@
 {
   "name": "dexterlib",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Tezos Dexter Utility Library",
   "main": "index.js",
   "scripts": {
