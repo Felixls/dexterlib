@@ -199,7 +199,9 @@ class ETHtz extends Token {
                 poolContract = 'KT1PDrBE59Zmxnb8vXRgRAG1XmvTMTs5EDHU';
                 break;
             case Network.Delphinet:
-                throw new Error('contract not available');
+                assetContract = '';
+                poolContract = '';
+                break;
         }
         super(assetContract, poolContract, toolkit, secretKey, network);
         this.decimals = 18;
