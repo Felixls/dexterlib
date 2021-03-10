@@ -9,16 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.XTZ = exports.ETHtz = exports.UsdTZ = exports.TzBTC = exports.KUSD = exports.Token = void 0;
+exports.XTZ = exports.ETHtz = exports.UsdTZ = exports.TzBTC = exports.KUSD = exports.Token = exports.Network = void 0;
 const bignumber_js_1 = require("bignumber.js");
 const signer_1 = require("./signer");
+var Network;
+(function (Network) {
+    Network["Mainnet"] = "mainnet";
+    Network["Delphinet"] = "delphinet";
+})(Network = exports.Network || (exports.Network = {}));
 class Token {
-    constructor(address, poolAddress, toolkit, secretKey) {
+    constructor(address, poolAddress, toolkit, secretKey, network) {
         this.decimals = 6;
         this.poolContractAddress = poolAddress;
         this.contractAddress = address;
         this.tezos = toolkit;
         this.secretKey = secretKey;
+        this.network = network;
     }
     getXTZPool() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -128,35 +134,81 @@ class Token {
 }
 exports.Token = Token;
 class KUSD extends Token {
-    constructor(toolkit, secretKey) {
-        super('KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV', 'KT1AbYeDbjjcAnV1QK7EZUUdqku77CdkTuv6', toolkit, secretKey);
+    constructor(toolkit, secretKey, network) {
+        let assetContract = '';
+        let poolContract = '';
+        switch (network) {
+            case Network.Mainnet:
+                assetContract = 'KT1K9gCRgaLRFKTErYt1wVxA3Frb9FjasjTV';
+                poolContract = 'KT1AbYeDbjjcAnV1QK7EZUUdqku77CdkTuv6';
+                break;
+            case Network.Delphinet:
+                assetContract = 'KT1RXpLtz22YgX24QQhxKVyKvtKZFaAVtTB9';
+                poolContract = 'KT1XTUGj7Rkgh6vLVDu91h81Xu2WGfyTxpqi';
+                break;
+        }
+        super(assetContract, poolContract, toolkit, secretKey, network);
         this.decimals = 18;
     }
 }
 exports.KUSD = KUSD;
 class TzBTC extends Token {
-    constructor(toolkit, secretKey) {
-        super('KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn', 'KT1BGQR7t4izzKZ7eRodKWTodAsM23P38v7N', toolkit, secretKey);
+    constructor(toolkit, secretKey, network) {
+        let assetContract = '';
+        let poolContract = '';
+        switch (network) {
+            case Network.Mainnet:
+                assetContract = 'KT1PWx2mnDueood7fEmfbBDKx1D9BAnnXitn';
+                poolContract = 'KT1BGQR7t4izzKZ7eRodKWTodAsM23P38v7N';
+                break;
+            case Network.Delphinet:
+                assetContract = 'KT1HeJBNHwWY18CuncPmMUVrSxurStXsMMvF';
+                poolContract = 'KT1QGd6nEG2Dg2LcmkpveYQ98j5b2WgePtdo';
+                break;
+        }
+        super(assetContract, poolContract, toolkit, secretKey, network);
         this.decimals = 8;
     }
 }
 exports.TzBTC = TzBTC;
 class UsdTZ extends Token {
-    constructor(toolkit, secretKey) {
-        super('KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9', 'KT1Tr2eG3eVmPRbymrbU2UppUmKjFPXomGG9', toolkit, secretKey);
+    constructor(toolkit, secretKey, network) {
+        let assetContract = '';
+        let poolContract = '';
+        switch (network) {
+            case Network.Mainnet:
+                assetContract = 'KT1LN4LPSqTMS7Sd2CJw4bbDGRkMv2t68Fy9';
+                poolContract = 'KT1Tr2eG3eVmPRbymrbU2UppUmKjFPXomGG9';
+                break;
+            case Network.Delphinet:
+                assetContract = 'KT1WvDfFgUKXWiBvQT46F8GpZ3rjQ6hLo7tz';
+                poolContract = 'KT1Uw3c2EgxTEVN378PaaK68jNK4DqcEuLcy';
+                break;
+        }
+        super(assetContract, poolContract, toolkit, secretKey, network);
     }
 }
 exports.UsdTZ = UsdTZ;
 class ETHtz extends Token {
-    constructor(toolkit, secretKey) {
-        super('KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8', 'KT1PDrBE59Zmxnb8vXRgRAG1XmvTMTs5EDHU', toolkit, secretKey);
+    constructor(toolkit, secretKey, network) {
+        let assetContract = '';
+        let poolContract = '';
+        switch (network) {
+            case Network.Mainnet:
+                assetContract = 'KT19at7rQUvyjxnZ2fBv7D9zc8rkyG7gAoU8';
+                poolContract = 'KT1PDrBE59Zmxnb8vXRgRAG1XmvTMTs5EDHU';
+                break;
+            case Network.Delphinet:
+                throw new Error('contract not available');
+        }
+        super(assetContract, poolContract, toolkit, secretKey, network);
         this.decimals = 18;
     }
 }
 exports.ETHtz = ETHtz;
 class XTZ extends Token {
-    constructor(toolkit) {
-        super('', '', toolkit, '');
+    constructor(toolkit, network) {
+        super('', '', toolkit, '', network);
     }
     getBalance(address) {
         return __awaiter(this, void 0, void 0, function* () {
