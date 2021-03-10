@@ -59,7 +59,7 @@ class Token {
             try {
                 const contract = yield this.tezos.contract.at(this.contractAddress);
                 const contractStorage = yield contract.storage();
-                const ledger = yield contractStorage.ledger;
+                let ledger = yield contractStorage.ledger;
                 if (ledger === undefined) {
                     return new bignumber_js_1.BigNumber(0);
                 }
@@ -149,6 +149,27 @@ class KUSD extends Token {
         }
         super(assetContract, poolContract, toolkit, secretKey, network);
         this.decimals = 18;
+    }
+    getBalance(address) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const contract = yield this.tezos.contract.at(this.contractAddress);
+                const contractStorage = yield contract.storage();
+                let ledger = yield contractStorage.balances;
+                if (ledger === undefined) {
+                    return new bignumber_js_1.BigNumber(0);
+                }
+                const bigMapKey = yield ledger.get(address);
+                if (bigMapKey === undefined) {
+                    return new bignumber_js_1.BigNumber(0);
+                }
+                return bigMapKey.balance;
+            }
+            catch (err) {
+                console.log(err);
+                throw err;
+            }
+        });
     }
 }
 exports.KUSD = KUSD;
