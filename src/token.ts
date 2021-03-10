@@ -56,11 +56,8 @@ export class Token {
   async getBalance(address: string): Promise<BigNumber> {
     try {
       const contract = await this.tezos.contract.at(this.contractAddress);
-      const contractStorage = await contract.storage();
-      let ledger = await (contractStorage as any).ledger;
-      if (ledger === undefined) {
-        ledger = await (contractStorage as any).balances;
-      }
+      const contractStorage: any = await contract.storage();
+      let ledger = await contractStorage.ledger;
       if (ledger === undefined) {
         return new BigNumber(0);
       }
@@ -175,6 +172,25 @@ export class KUSD extends Token {
 
     super(assetContract, poolContract, toolkit, secretKey, network);
     this.decimals = 18;
+  }
+
+  async getBalance(address: string): Promise<BigNumber> {
+    try {
+      const contract = await this.tezos.contract.at(this.contractAddress);
+      const contractStorage: any = await contract.storage();
+      let ledger = await contractStorage.balances;
+      if (ledger === undefined) {
+        return new BigNumber(0);
+      }
+      const bigMapKey = await ledger.get(address);
+      if (bigMapKey === undefined) {
+        return new BigNumber(0);
+      }
+      return bigMapKey.balance;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 }
 
