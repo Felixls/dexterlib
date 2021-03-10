@@ -57,7 +57,10 @@ export class Token {
     try {
       const contract = await this.tezos.contract.at(this.contractAddress);
       const contractStorage = await contract.storage();
-      const ledger = await (contractStorage as any).ledger;
+      let ledger = await (contractStorage as any).ledger;
+      if (ledger === undefined) {
+        ledger = await (contractStorage as any).balances;
+      }
       if (ledger === undefined) {
         return new BigNumber(0);
       }
